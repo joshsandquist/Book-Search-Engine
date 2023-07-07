@@ -41,5 +41,23 @@ const resolvers = {
             return { token, user };
           },
 
+          //Mutation to save a book to user profile
+          //Input arg taken from BookInput type from typeDefs
+          saveBook: async (parent, { input }, context ) => {
+            //Checking for logged in user
+            if (context.user) {
+            //using mongoose update method to find user _id that matches context user._id
+                const updatedUser = await User.findOneAndUpdate(
+                    { _id: context.user._id },
+                //mongoose operation to add input book to user savedBooks
+                    { $addToSet: { savedBooks: input }},
+                //return a new copy of the data
+                    {new : true}
+                );
+            return updatedUser
+            }
+          }
+
+
     }
 }
