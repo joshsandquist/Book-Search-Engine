@@ -10,9 +10,8 @@ const { authMiddleware } = require('./utils/auth')
 // importing resolvers and typedefs
 const { typeDefs, resolvers } = require('./schemas')
 
-
-const app = express();
 const PORT = process.env.PORT || 3001;
+const app = express();
 //setting up Apollo server
 const server = new ApolloServer({
   typeDefs,
@@ -20,7 +19,7 @@ const server = new ApolloServer({
   context: authMiddleware
 })
 
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 // if we're in production, serve client/build as static assets
@@ -30,7 +29,7 @@ if (process.env.NODE_ENV === 'production') {
 
 //app.use(routes);
 
-const startApolloServer = async () => {
+const startApolloServer = async (typeDefs, resolvers) => {
   await server.start();
   server.applyMiddleware({ app });
   
