@@ -56,8 +56,27 @@ const resolvers = {
                 );
             return updatedUser
             }
+            throw new AuthenticationError('You need to be logged in!')
+          },
+
+          //Mutation to remove a book from User
+          //Takes in a bookId as an argument
+          removeBook: async (parent, { bookId}, context) => {
+            //Checks to see if user is validated
+            if (context.user) {
+                // Using same mongoose findOneandUpdate method to get User
+                const updatedUser = await User.findOneAndUpdate(
+                    { _id: context.user._id},
+                    // using mongoose pull method to remove item from saveBooks array by id
+                    { $pull: { savedBooks: { bookId }}},
+                    // Returning updated copy of data again
+                    {new: true}
+                );
+            return updatedUser
+            }
+            throw new AuthenticationError('You need to be logged in!')
           }
-
-
     }
 }
+
+module.exports = resolvers

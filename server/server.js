@@ -1,14 +1,19 @@
 const express = require('express');
 const path = require('path');
+//Added required packages for Apollo Server
 const { ApolloServer } = require ('apollo-server-express')
 const db = require('./config/connection');
+//Importing authMiddleware for use with context
 const { authMiddleware } = require('./utils/auth')
-const routes = require('./routes');
+//commented out routes for now
+//const routes = require('./routes');
+// importing resolvers and typedefs
 const { typeDefs, resolvers } = require('./schemas')
 
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+//setting up Apollo server
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -23,9 +28,9 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/build')));
 }
 
-app.use(routes);
+//app.use(routes);
 
-const startApolloServer = async (typeDefs, resolvers) => {
+const startApolloServer = async () => {
   await server.start();
   server.applyMiddleware({ app });
   
