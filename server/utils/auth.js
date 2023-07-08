@@ -10,19 +10,20 @@ module.exports = {
     if (req.headers.authorization) {
       token = token.split(' ').pop().trim();
     }
-
+    //Added console logs for error debugging
     if (!token) {
-      return req;
+      console.log('No token provided');
+      return { user: null };
     }
 
     try {
       const { data } = jwt.verify(token, secret, { maxAge: expiration });
-      req.user = data;
+      console.log('User token found', data);
+      return { user: data };
     } catch {
       console.log('Invalid token');
+      return { user: null };
     }
-
-    return req;
   },
   signToken: function ({ email, username, _id }) {
     const payload = { email, username, _id };

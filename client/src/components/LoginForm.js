@@ -20,7 +20,6 @@ const LoginForm = () => {
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
-    // check if form has everything (as per react-bootstrap docs)
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
@@ -32,12 +31,15 @@ const LoginForm = () => {
         variables: { ...userFormData },
       });
 
-      Auth.login(data.loginUser.token);
+      if (!data || !data.login) {
+        throw new Error('No user data returned from server');
+      }
+      Auth.login(data.login.token);
     } catch (err) {
-      console.error(err);
+      console.error('Login error:', err);
       setShowAlert(true);
     }
-
+  
     setUserFormData({
       username: '',
       email: '',

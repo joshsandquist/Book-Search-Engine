@@ -16,8 +16,12 @@ const app = express();
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: authMiddleware
-})
+  // modified context to ensure user is being added
+  context: ({ req }) => {
+    const { user } = authMiddleware({ req });
+    return { user };
+  },
+});
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
